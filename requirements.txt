@@ -1,0 +1,3 @@
+requests
+json
+-e git+https://github.com/DimensionDataCBUSydney/servicelayer-identity-python#egg=servicelayer-identity
