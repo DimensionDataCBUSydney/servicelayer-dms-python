@@ -3,7 +3,51 @@ class Organizations(object):
         self.dms_client = dms_client
 
     def get_organizations(self):
-        return self.dms_client.get("v2/organizations")
+        return self.dms_client.get("v2/organizations")['Results']['$values']
 
     def get_organization(self, id):
         return self.dms_client.get("v2/organizations/%s" % id)
+
+    def get_organization_properties(self, id, property_group):
+        return self.dms_client.get(
+            "v2/organizations/%s/properties" % id,
+            params={"propertyGroup": property_group})
+
+    def get_organization_by_ids(self, organization_ids):
+        return self.dms_client.post(
+            "v2/organizations/query/byids",
+            {organization_ids})['Results']['$values']
+
+    def update_organization(self, id, name, created_utc,
+                            last_modified_utc, update_token,
+                            provisioning_status, extra_properties=None):
+        updated_organization = {
+            "Name": name,
+            "CreatedUtc": created_utc,
+            "LastModifiedUtc": last_modified_utc,
+            "UpdateToken": update_token,
+            "ProvisioningStatus": provisioning_status
+        }
+        if extra_properties is not None:
+            updated_organization["Properties"] = extra_properties
+
+        return self.dms_client.put("v2/organizations/%s" % id,
+                                   updated_organization)
+
+    def create_organization(self, name, parent_organization_id,
+                            extra_properties=None):
+        new_organization = {
+            "Name": name,
+            "ParentOrganizationId": parent_organization_id
+        }
+        if extra_properties is not None:
+            new_organization["Properties"] = extra_properties
+        return self.dms_client.post("v2/organizations/provision",
+                                    new_organization)
+
+    def delete_organization(self, id, delete=True):
+        params = {
+            "delete": delete
+        }
+        return self.dms_client.post("v2/organizations/%s/deprovision" % id,
+                                    params=params)

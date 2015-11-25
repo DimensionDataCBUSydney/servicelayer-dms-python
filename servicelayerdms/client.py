@@ -46,3 +46,21 @@ class DmsClient(object):
             raise DmsRequestError(http_error_msg, response.status_code)
         else:
             return response.json()
+
+    def put(self, uri, data, params=None):
+        response = requests.put(self.api_url + uri,
+                                params=params,
+                                data=data,
+                                headers=self._get_default_headers(),
+                                verify=self.verify)
+        http_error_msg = ''
+        if 400 <= response.status_code < 500:
+            http_error_msg = '%s Client Error: %s' % (
+                response.status_code, response.json()['Message'])
+        elif 500 <= response.status_code < 600:
+            http_error_msg = '%s Server Error: %s' % (
+                response.status_code, response.json()['Message'])
+        if http_error_msg:
+            raise DmsRequestError(http_error_msg, response.status_code)
+        else:
+            return response.json()
