@@ -6,7 +6,7 @@ class Assets(object):
         params = {"assetType": asset_type}
         request = {"options": options}
         return self.dms_client.get(
-            "v2/assets",
+            "v2/assets/query",
             params=params,
             data=request)['Results']['$values']
 

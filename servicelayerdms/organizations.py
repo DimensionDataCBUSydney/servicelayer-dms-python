@@ -3,7 +3,7 @@ class Organizations(object):
         self.dms_client = dms_client
 
     def get_organizations(self):
-        return self.dms_client.get("v2/organizations")['Results']['$values']
+        return self.dms_client.get("v2/organizations/query")['Results']['$values']
 
     def get_organization(self, id):
         return self.dms_client.get("v2/organizations/%s" % id)
