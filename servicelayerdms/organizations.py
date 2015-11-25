@@ -2,9 +2,12 @@ class Organizations(object):
     def __init__(self, dms_client):
         self.dms_client = dms_client
 
-    def get_organizations(self):
-        return self.dms_client.get(
-            "v2/organizations/query")['Results']['$values']
+    def get_organizations(self, parent_organization_id='Organizations/ROOT'):
+        data = {
+            "ParentOrganizationId": parent_organization_id
+        }
+        return self.dms_client.post(
+            "v2/organizations/query", data)['Results']['$values']
 
     def get_organization(self, id):
         return self.dms_client.get("v2/organizations/%s" % id)
@@ -14,10 +17,11 @@ class Organizations(object):
             "v2/organizations/%s/properties" % id,
             params={"propertyGroup": property_group})
 
-    def get_organization_by_ids(self, organization_ids):
+    def get_organizations_by_ids(self, organization_ids):
+        list_str = '\',\''.join(organization_ids)
         return self.dms_client.post(
             "v2/organizations/query/byids",
-            {organization_ids})['Results']['$values']
+            "['%s']" % list_str)
 
     def update_organization(self, id, name, created_utc,
                             last_modified_utc, update_token,

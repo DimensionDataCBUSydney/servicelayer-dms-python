@@ -17,9 +17,10 @@ class Users(object):
             params={"propertyGroup": property_group})
 
     def get_users_by_ids(self, user_ids):
+        list_str = '\',\''.join(user_ids)
         return self.dms_client.post(
             "v2/users/query/byids",
-            {user_ids})['Results']['$values']
+            "['%s']" % list_str)
 
     def update_user(self, id, first_name, last_name, display_name, upn,
                     created_utc, last_modified_utc, update_token,

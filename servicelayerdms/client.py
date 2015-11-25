@@ -10,7 +10,7 @@ class DmsClient(object):
         self.token = self.sts_client.get_token()
 
     def _get_default_headers(self):
-        return {"X-Auth-Token": self.token}
+        return {"X-Auth-Token": self.token, "Content-Type": "application/json"}
 
     def get(self, uri, params=None):
         response = requests.get(self.api_url + uri,
