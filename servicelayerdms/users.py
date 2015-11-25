@@ -48,14 +48,15 @@ class Users(object):
             "upn": upn,
             "organizationId": organization_id
         }
+        data = {}
         if extra_properties is not None:
-            params["properties"] = extra_properties
+            data["properties"] = extra_properties
 
-        return self.dms_client.post("v2/users/provision", params=params)
+        return self.dms_client.post("v2/users/provision", data, params=params)
 
     def delete_user(self, id, delete=True):
         params = {
             "delete": delete
         }
-        return self.dms_client.post("v2/users/%s/deprovision" % id,
+        return self.dms_client.post("v2/users/%s/deprovision" % id, {},
                                     params=params)
